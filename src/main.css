@@ -1,0 +1,201 @@
+/* ===== Base ===== */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: "Inter", sans-serif;
+}
+
+body {
+    background: linear-gradient(135deg, #0f172a, #1e293b);
+    min-height: 100vh;
+    color: white;
+}
+
+/* ===== Title ===== */
+h1 {
+    text-align: center;
+    margin: 30px 0;
+    font-weight: 600;
+}
+
+/* ===== Input Section ===== */
+.inputTaskDiv {
+    max-width: 420px;
+    margin: auto;
+    display: flex;
+    gap: 10px;
+    padding: 16px;
+
+    background: rgba(255,255,255,0.05);
+    backdrop-filter: blur(10px);
+    border-radius: 14px;
+}
+
+/* Input */
+.input-Box {
+    flex: 1;
+    position: relative;
+}
+
+.input-task {
+    width: 100%;
+    padding: 14px;
+    border-radius: 10px;
+    border: 1px solid rgba(255,255,255,0.2);
+    background: transparent;
+    color: white;
+    outline: none;
+    transition: 0.25s;
+}
+
+.input-task:focus {
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 2px rgba(59,130,246,0.3);
+}
+
+/* Floating label */
+.inputLabel {
+    position: absolute;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: #1e293b;
+    padding: 0 6px;
+    color: #9ca3af;
+    transition: 0.2s;
+}
+
+.input-task:focus + .inputLabel,
+.input-task:not(:placeholder-shown) + .inputLabel {
+    top: -1px;
+    font-size: 19px;
+    color: #3b82f6;
+}
+
+/* Button */
+.Add-Task {
+    padding: 14px 18px;
+    border-radius: 10px;
+    border: none;
+    cursor: pointer;
+
+    background: linear-gradient(135deg, #3b82f6, #6366f1);
+    color: white;
+
+    transition: 0.2s;
+}
+
+/* Press effect */
+.Add-Task:active {
+    transform: scale(0.95);
+}
+
+/* Hover */
+.Add-Task:hover {
+    transform: translateY(-2px);
+}
+
+/* ===== Task List ===== */
+.Task-List {
+    max-width: 420px;
+    margin: 20px auto;
+}
+
+/* ===== Task Item (ANIMATED) ===== */
+.task-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    padding: 14px;
+    margin-bottom: 12px;
+
+    border-radius: 12px;
+
+    background: rgba(255,255,255,0.05);
+    backdrop-filter: blur(8px);
+
+    border: 1px solid rgba(255,255,255,0.08);
+
+    animation: fadeSlide 0.4s ease;
+
+    transition: 0.2s;
+}
+
+/* Hover lift */
+.task-item:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+}
+
+/* Animation */
+@keyframes fadeSlide {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Task text */
+.task-item p {
+    flex: 1;
+}
+
+/* Completed */
+.completed {
+    text-decoration: line-through;
+    opacity: 0.5;
+}
+
+/* Buttons */
+.Status, .Delete {
+    margin-left: 8px;
+    padding: 6px 10px;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    font-size: 12px;
+    transition: 0.2s;
+}
+
+/* Toggle */
+.Status {
+    background: #22c55e;
+}
+.Status:active {
+    transform: scale(0.9);
+}
+
+/* Delete */
+.Delete {
+    background: #ef4444;
+}
+.Delete:active {
+    transform: scale(0.9);
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 500px) {
+    .inputTaskDiv {
+        flex-direction: column;
+    }
+
+    .Add-Task {
+        width: 100%;
+    }
+
+    .task-item {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+    }
+
+    .Status, .Delete {
+        width: 100%;
+    }
+}
