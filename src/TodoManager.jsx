@@ -11,7 +11,7 @@ function TaskRender({taskList, setTaskList}){
     function addTask() {
         if(newTask.name.trim() === '') return;
         setTaskList((prev) => [...prev, newTask]);
-        setTask({name: "", status: false});
+        setTask({ id: Date.now(), name: "", status: false});
     }
 
     function handleStatus(index){

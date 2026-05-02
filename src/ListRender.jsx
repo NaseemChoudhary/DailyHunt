@@ -27,11 +27,11 @@ function SortableItem({ task, index, handleStatus, deleteTask }) {
         {task.name}
       </p>
 
-      <button onClick={() => handleStatus(index)}>
+      <button onClick={(e) => { e.stopPropagation(); handleStatus(index); }}>
         {task.status ? "Done" : "Pending"}
       </button>
 
-      <button onClick={() => deleteTask(index)}>
+      <button onClick={(e) => { e.stopPropagation(); deleteTask(index); }}>
         Delete
       </button>
     </div>
