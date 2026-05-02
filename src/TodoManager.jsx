@@ -6,7 +6,7 @@ function TaskRender({taskList, setTaskList}){
     function handleChange(e){
         setTask((t) => ({...t, name: e.target.value}));
     }
-    const [newTask, setTask] = useState({ name: '', status: false });
+    const [newTask, setTask] = useState({ id: new Date.now() ,name: '', status: false });
 
     function addTask() {
         if(newTask.name.trim() === '') return;

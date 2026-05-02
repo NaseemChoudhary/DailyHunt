@@ -1,57 +1,74 @@
+import { DndContext, closestCenter } from "@dnd-kit/core";
+import {
+  SortableContext,
+  useSortable,
+  verticalListSortingStrategy,
+  arrayMove,
+} from "@dnd-kit/sortable";
+import { CSS } from "@dnd-kit/utilities";
 
-import { useState, useEffect } from "react";
+function SortableItem({ task, index, handleStatus, deleteTask }) {
+  const {
+    attributes,
+    listeners,
+    setNodeRef,
+    transform,
+    transition,
+  } = useSortable({ id: task.id });
+
+  const style = {
+    transform: CSS.Transform.toString(transform),
+    transition,
+  };
+
+  return (
+    <div ref={setNodeRef} style={style} className="task-item" {...attributes} {...listeners}>
+      <p className={task.status ? "completed" : ""}>
+        {task.name}
+      </p>
+
+      <button onClick={() => handleStatus(index)}>
+        {task.status ? "Done" : "Pending"}
+      </button>
+
+      <button onClick={() => deleteTask(index)}>
+        Delete
+      </button>
+    </div>
+  );
+}
 
 export default function ListRender({ tasklist, settasklist, deleteTask, handleStatus }) {
 
-    const [selected, setSelected] = useState(0);
+  const handleDragEnd = (event) => {
+    const { active, over } = event;
 
-    useEffect(() => {
-        const handleKey = (e) => {
-            if (e.key === "ArrowUp" && selected > 0) {
-                settasklist((prev) => {
-                    const newList = [...prev];
-                    [newList[selected - 1], newList[selected]] =
-                    [newList[selected], newList[selected - 1]];
-                    return newList;
-                });
-                setSelected((prev) => prev - 1);
-            }
-            console.log(tasklist.length);
-            if (e.key === "ArrowDown" && selected < tasklist.length - 1) {
-                settasklist((prev) => {
-                    const newList = [...prev];
-                    [newList[selected + 1], newList[selected]] =
-                    [newList[selected], newList[selected + 1]];
-                    return newList;
-                });
-                setSelected((prev) => prev + 1);
-            }
-        };
+    if (!over || active.id === over.id) return;
 
-        window.addEventListener("keydown", handleKey);
-        return () => window.removeEventListener("keydown", handleKey);
+    const oldIndex = tasklist.findIndex((t) => t.id === active.id);
+    const newIndex = tasklist.findIndex((t) => t.id === over.id);
 
-    }, [selected, tasklist]);
+    settasklist((prev) => arrayMove(prev, oldIndex, newIndex));
+  };
 
-    const list = tasklist.map((task, index) => (
-        <div
-            key={task.id || index}
-            className={`task-item ${selected === index ? "active" : ""}`}
-            onClick={() => setSelected(index)}
-        >
-            <p className={task.status ? "completed" : ""}>
-                {task.name}
-            </p>
-
-            <button onClick={() => handleStatus(index)}>
-                {task.status ? "Done" : "Pending"}
-            </button>
-
-            <button onClick={() => deleteTask(index)}>
-                Delete
-            </button>
+  return (
+    <DndContext collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
+      <SortableContext
+        items={tasklist.map((t) => t.id)}
+        strategy={verticalListSortingStrategy}
+      >
+        <div className="Task-List">
+          {tasklist.map((task, index) => (
+            <SortableItem
+              key={task.id}
+              task={task}
+              index={index}
+              handleStatus={handleStatus}
+              deleteTask={deleteTask}
+            />
+          ))}
         </div>
-    ));
-
-    return <div className="Task-List">{list}</div>;
+      </SortableContext>
+    </DndContext>
+  );
 }
