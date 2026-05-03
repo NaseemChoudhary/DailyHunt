@@ -1,3 +1,5 @@
+ import "./InputRenders.css";
+
 export default function InputRender({ task, handleChange, addTask }){
     return(
         <>

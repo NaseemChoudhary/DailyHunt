@@ -1,0 +1,31 @@
+.container {
+  max-width: 820px;
+  width: 100%;
+  padding: 24px;
+  display: grid;
+  gap: 24px;
+  background: rgba(15,23,42,0.75);
+  border: 1px solid rgba(148,163,184,0.14);
+  border-radius: 28px;
+  backdrop-filter: blur(14px);
+  box-shadow: 0 28px 90px rgba(15,23,42,0.28);
+}
+
+.main-section {
+  display: grid;
+  gap: 20px;
+  padding: 20px;
+  border-radius: 24px;
+  background: rgba(15,23,42,0.9);
+}
+
+@media (max-width: 640px) {
+  .container {
+    padding: 18px;
+    gap: 18px;
+  }
+
+  .main-section {
+    padding: 16px;
+  }
+}

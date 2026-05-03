@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
-import TaskRender from "./TodoManager.jsx";
-import Timer from "./CountDown.jsx";
+import TaskRender from "../helpingComponent/TodoManager.jsx";
+import Timer from "../helpingComponent/CountDown.jsx";
+import "./DailyTask.css";
 
 export default function DailyTask(){
     const [TodayTask, setTodayTask] = useState(() => {

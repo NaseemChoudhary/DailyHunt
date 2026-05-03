@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import "./CountDown.css";
 export default function Timer({ Till }) {
     const [now, setNow] = useState(new Date());
     useEffect(() => {

@@ -1,6 +1,7 @@
 import { useState } from "react";
-import InputRender from "./InputRenders.jsx";
-import ListRender from "./ListRender.jsx";
+import InputRender from "../input/InputRenders.jsx";
+import ListRender from "../task/ListRender.jsx";
+import "./TodoManager.css";
 function TaskRender({taskList, setTaskList}){
 
     function handleChange(e){
@@ -14,22 +15,22 @@ function TaskRender({taskList, setTaskList}){
         setTask({ id: Date.now(), name: "", status: false});
     }
 
-    function handleStatus(index){
+    function handleStatus(id){
         setTaskList((prev) => 
-            prev.map((newTask, i) => 
-                i === index ? {...newTask, status: !newTask.status} : newTask
+            prev.map((newTask) => 
+                newTask.id === id ? {...newTask, status: !newTask.status} : newTask
             )
         );
     }
-    function deleteTask(index){
-        setTaskList((prev) => prev.filter((_, i) => i !== index));
+    function deleteTask(id){
+        setTaskList((prev) => prev.filter((task) => task.id !== id));
     }
 
     return(
-        <>
+        <div className="task-manager">
             <InputRender task={newTask} handleChange={handleChange} addTask={addTask} />
-            <ListRender tasklist={taskList} deleteTask={deleteTask} handleStatus={handleStatus} settasklist={setTaskList}/>
-        </>
+            <ListRender taskList={taskList} deleteTask={deleteTask} handleStatus={handleStatus} setTaskList={setTaskList}/>
+        </div>
     );
 }
 

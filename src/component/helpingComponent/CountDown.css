@@ -1,0 +1,31 @@
+.Block {
+  display: flex;
+  justify-content: center;
+  gap: 14px;
+  flex-wrap: wrap;
+  margin-bottom: 0;
+}
+
+.Block > div {
+  background: rgba(255,255,255,0.12);
+  padding: 12px 18px;
+  border-radius: 16px;
+  font-weight: 700;
+  font-size: 1.1rem;
+  min-width: 60px;
+  text-align: center;
+  color: #f8fafc;
+  border: 1px solid rgba(255,255,255,0.1);
+}
+
+@media (max-width: 520px) {
+  .Block {
+    gap: 10px;
+  }
+
+  .Block > div {
+    padding: 10px 12px;
+    font-size: 1rem;
+    min-width: 48px;
+  }
+}
