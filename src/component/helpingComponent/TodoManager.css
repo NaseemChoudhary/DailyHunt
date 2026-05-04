@@ -1,11 +1,12 @@
 .task-manager {
   display: flex;
   flex-direction: column;
-  gap: 18px;
+  gap: clamp(14px, 1.6vw, 20px);
+  background: none;
 }
 
 @media (max-width: 520px) {
   .task-manager {
-    gap: 14px;
+    gap: clamp(12px, 2vw, 16px);
   }
 }

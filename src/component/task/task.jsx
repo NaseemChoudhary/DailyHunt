@@ -8,10 +8,13 @@ export default function Task({t, deleteTask, handleStatus}){
     };
 
     return(
-        <div ref={setNodeRef} {...attributes} {...listeners} style={style} className="task-block" key={t.id}>
+        <div ref={setNodeRef} style={style} className="task-block" key={t.id}>
+            <span {...attributes} {...listeners}>☰</span>
             <div className="task">{t.name}</div>
-            <button className="status" onClick={() => handleStatus(t.id)}>{t.status?"Done":"Pending"}</button>
-            <button className="delete" onClick={() => deleteTask(t.id)}>Delete</button>
+            <div className="task-actions">
+              <button className="status" onClick={() => handleStatus(t.id)}>{t.status?"Done":"Pending"}</button>
+              <button className="delete" onClick={() => deleteTask(t.id)}>Delete</button>
+            </div>
         </div>
     )
 }

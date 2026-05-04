@@ -1,31 +1,31 @@
 .container {
-  max-width: 820px;
+  max-width: 860px;
   width: 100%;
-  padding: 24px;
+  padding: clamp(22px, 2.5vw, 28px);
   display: grid;
-  gap: 24px;
-  background: rgba(15,23,42,0.75);
-  border: 1px solid rgba(148,163,184,0.14);
-  border-radius: 28px;
-  backdrop-filter: blur(14px);
-  box-shadow: 0 28px 90px rgba(15,23,42,0.28);
+  gap: clamp(20px, 2vw, 26px);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: clamp(24px, 2vw, 32px);
+  backdrop-filter: blur(18px);
+  box-shadow: var(--shadow);
 }
 
 .main-section {
   display: grid;
-  gap: 20px;
-  padding: 20px;
-  border-radius: 24px;
-  background: rgba(15,23,42,0.9);
+  gap: clamp(18px, 1.8vw, 22px);
+  padding: clamp(18px, 2vw, 24px);
+  border-radius: clamp(20px, 1.7vw, 28px);
+  background: var(--surface-strong);
 }
 
 @media (max-width: 640px) {
   .container {
-    padding: 18px;
-    gap: 18px;
+    padding: clamp(18px, 3vw, 22px);
+    gap: clamp(16px, 3vw, 20px);
   }
 
   .main-section {
-    padding: 16px;
+    padding: clamp(16px, 3vw, 18px);
   }
 }

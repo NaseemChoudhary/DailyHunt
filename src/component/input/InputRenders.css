@@ -1,20 +1,21 @@
 h1 {
   text-align: center;
-  font-size: clamp(1.9rem, 2.4vw, 2.3rem);
-  margin-bottom: 14px;
-  color: #e2e8f0;
-  letter-spacing: 0.02em;
+  font-size: clamp(2rem, 3vw, 2.4rem);
+  margin-bottom: clamp(14px, 2.2vw, 18px);
+  color: var(--text);
+  letter-spacing: 0.03em;
 }
 
 .inputTaskDiv {
   display: flex;
   align-items: flex-end;
-  gap: 12px;
-  background: rgba(255,255,255,0.09);
-  border: 1px solid rgba(255,255,255,0.2);
-  border-radius: 20px;
-  padding: 18px;
+  gap: clamp(12px, 1.7vw, 18px);
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: clamp(18px, 1.4vw, 24px);
+  padding: clamp(18px, 2vw, 24px);
   flex-wrap: wrap;
+  backdrop-filter: blur(12px);
 }
 
 .input-Box {
@@ -25,57 +26,58 @@ h1 {
 
 .input-task {
   width: 100%;
-  padding: 14px 14px 12px;
-  border-radius: 14px;
-  border: 1px solid rgba(203,213,225,0.24);
-  background: rgba(15,23,42,0.86);
-  color: #f8fafc;
+  padding: clamp(14px, 1.1vw, 16px) clamp(14px, 1.1vw, 18px);
+  border-radius: clamp(14px, 1vw, 16px);
+  border: 1px solid rgba(148, 163, 184, 0.24);
+  background: rgba(15, 23, 42, 0.96);
+  color: var(--text);
   outline: none;
   transition: border 0.25s, box-shadow 0.25s, background 0.25s;
-  font-size: 1rem;
+  font-size: clamp(0.95rem, 1vw, 1rem);
 }
 
 .input-task:focus {
-  border-color: #60a5fa;
-  box-shadow: 0 0 0 3px rgba(96,165,250,0.16);
-  background: rgba(15,23,42,0.98);
+  border-color: var(--primary);
+  box-shadow: 0 0 0 4px var(--primary-soft);
+  background: rgba(15, 23, 42, 1);
 }
 
 .inputLabel {
   position: absolute;
-  left: 16px;
+  left: clamp(14px, 1.4vw, 16px);
   top: 50%;
   transform: translateY(-50%);
-  background: rgba(15,23,42,0.9);
-  padding: 0 6px;
-  color: #94a3b8;
+  background: rgba(15, 23, 42, 0.95);
+  padding: 0 clamp(5px, 0.8vw, 8px);
+  color: var(--muted);
   transition: top 0.2s, transform 0.2s, font-size 0.2s, color 0.2s;
   pointer-events: none;
 }
 
 .input-task:focus + .inputLabel,
 .input-task:not(:placeholder-shown) + .inputLabel {
-  top: -8px;
-  transform: translateY(0);
-  font-size: 0.78rem;
-  color: #60a5fa;
+  top: -9px;
+  transform: none;
+  font-size: clamp(0.78rem, 0.9vw, 0.84rem);
+  color: var(--primary);
 }
 
 .Add-Task {
   border: none;
-  border-radius: 16px;
-  padding: 14px 20px;
-  background: linear-gradient(135deg, #3b82f6, #6366f1);
+  border-radius: clamp(16px, 1.2vw, 18px);
+  padding: clamp(14px, 1vw, 16px) clamp(18px, 2vw, 22px);
+  background: linear-gradient(135deg, #3b82f6 0%, #6366f1 100%);
   color: #ffffff;
   cursor: pointer;
   transition: transform 0.2s, box-shadow 0.2s, filter 0.2s;
-  min-width: 140px;
-  font-weight: 600;
+  min-width: clamp(120px, 20vw, 150px);
+  font-weight: 700;
+  font-size: clamp(0.95rem, 1vw, 1rem);
 }
 
 .Add-Task:hover {
   transform: translateY(-2px);
-  box-shadow: 0 12px 24px rgba(59,130,246,0.22);
+  box-shadow: 0 14px 30px rgba(59, 130, 246, 0.22);
 }
 
 .Add-Task:active {
