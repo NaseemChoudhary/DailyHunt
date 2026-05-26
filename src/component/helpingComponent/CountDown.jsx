@@ -20,9 +20,9 @@ export default function Timer({ Till }) {
 
     return (
         <div className="Block">
-        <div className="Block hr">{hours}h: </div>
-        <div className="Block mi">{minutes}m: </div>
-        <div className="Block sec">{seconds}s: </div> 
+        <div className="Block hr">{hours}h</div>
+        <div className="Block mi">{minutes}m</div>
+        <div className="Block sec">{seconds}s</div> 
         </div>
     );
 }

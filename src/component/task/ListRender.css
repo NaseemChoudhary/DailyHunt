@@ -5,109 +5,96 @@
 
 .task-block {
   display: flex;
-  align-items: center;
+  align-items: stretch;
   justify-content: space-between;
   gap: clamp(12px, 1.6vw, 18px);
   padding: clamp(16px, 1.6vw, 20px);
   border-radius: clamp(20px, 1.2vw, 24px);
-  background: rgba(255, 255, 255, 0.08);
-  border: 1px solid rgba(255, 255, 255, 0.14);
-  box-shadow: 0 16px 50px rgba(0, 0, 0, 0.16);
-  transition: transform 0.22s ease, box-shadow 0.22s ease;
+  background: rgba(96, 165, 250, 0.06);
+  border: 1px solid rgba(148, 163, 184, 0.15);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(16px);
+  transition: transform 0.22s ease, box-shadow 0.22s ease, border-color 0.22s ease;
   touch-action: none;
 }
 
 .task-block:hover {
   transform: translateY(-2px);
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.15);
+  border-color: rgba(148, 163, 184, 0.3);
 }
 
 .task {
-  flex: 1 1 0;
+  flex: 1 1 auto;
   min-width: 0;
   color: var(--text);
   font-size: clamp(1rem, 1vw, 1.08rem);
   line-height: 1.5;
   word-break: break-word;
+  overflow-wrap: anywhere;
+}
+
+.task-content {
+  display: flex;
+  gap: clamp(12px, 1.2vw, 16px);
+  align-items: flex-start;
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.drag-handle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6px;
+  color: var(--text);
+  cursor: grab;
+  flex: 0 0 auto;
+}
+
+.task-actions {
+  display: flex;
+  flex-direction: row;
+  gap: clamp(8px, 1vw, 12px);
+  align-items: flex-end;
+  justify-content: center;
+  flex: 0 0 clamp(120px, 22vw, 180px);
+  min-width: clamp(120px, 18vw, 180px);
 }
 
 .status,
 .delete {
-  flex: 0 0 auto;
-  min-width: clamp(82px, 16vw, 100px);
-  padding: clamp(10px, 1vw, 14px);
-  border: none;
-  border-radius: clamp(14px, 1vw, 16px);
+  flex: none;
+  width: auto;
+  padding: clamp(8px, 0.9vw, 12px) clamp(12px, 1.2vw, 16px);
+  border: 1px solid transparent;
+  border-radius: clamp(12px, 1vw, 14px);
   cursor: pointer;
-  transition: transform 0.18s ease, filter 0.18s ease;
+  transition: transform 0.18s ease, filter 0.18s ease, border-color 0.18s ease;
   font-weight: 700;
-  color: #ffffff;
   white-space: nowrap;
+  font-size: clamp(0.9rem, 0.95vw, 1rem);
 }
 
 .status {
-  background: linear-gradient(135deg, var(--success) 0%, #16a34a 100%);
+  background: linear-gradient(135deg, rgba(34, 197, 94, 0.2) 0%, rgba(22, 163, 74, 0.1) 100%);
+  border: 1px solid var(--success);
+  color: var(--success);
 }
 
 .delete {
-  background: linear-gradient(135deg, var(--danger) 0%, #dc2626 100%);
+  background: linear-gradient(135deg, rgba(239, 68, 68, 0.2) 0%, rgba(220, 38, 38, 0.1) 100%);
+  border: 1px solid var(--danger);
+  color: var(--danger);
 }
 
 .status:hover,
 .delete:hover {
-  filter: brightness(1.05);
+  filter: brightness(1.2);
+  border-color: currentColor;
 }
 
 .status:active,
 .delete:active {
   transform: scale(0.97);
-}
-
-.task-actions {
-  display: flex;
-  gap: clamp(8px, 1vw, 12px);
-  align-items: center;
-  justify-content: flex-end;
-}
-
-@media (max-width: 700px) {
-  .task-block {
-    flex-wrap: wrap;
-    align-items: flex-start;
-    gap: clamp(12px, 2vw, 16px);
-  }
-
-  .task {
-    width: 100%;
-    margin-bottom: clamp(10px, 1.5vw, 14px);
-  }
-
-  .task-actions {
-    width: 100%;
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: flex-end;
-    gap: clamp(8px, 1.8vw, 12px);
-  }
-
-  .status,
-  .delete {
-    flex: 1 1 calc(48% - 8px);
-    min-width: 0;
-  }
-}
-
-@media (max-width: 520px) {
-  .task-actions {
-    flex-direction: column;
-    align-items: flex-end;
-    width: 100%;
-  }
-
-  .status,
-  .delete {
-    flex: 1 1 100%;
-    min-width: 100%;
-    padding: clamp(8px, 2vw, 10px);
-  }
 }

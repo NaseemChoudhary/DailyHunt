@@ -1,8 +1,12 @@
+import { useState } from 'react';
 import { closestCorners, DndContext, KeyboardSensor, PointerSensor, TouchSensor, useSensor, useSensors } from "@dnd-kit/core";
-import Task from "./task";
+import SwipeableTask from "./SwipeableTask";
 import "./ListRender.css"
 import { arrayMove, sortableKeyboardCoordinates} from "@dnd-kit/sortable";
+
 function ListRender({taskList, deleteTask, handleStatus, setTaskList}){
+  // Track which item is currently open for swipe actions
+  const [activeItemId, setActiveItemId] = useState(null);
 
   const getIndex = id => taskList.findIndex(task => task.id == id);
 
@@ -32,7 +36,14 @@ function ListRender({taskList, deleteTask, handleStatus, setTaskList}){
     collisionDetection={closestCorners}>
     {
       taskList.map((t, i) => 
-        <Task key={t.id} t={t} deleteTask={deleteTask} handleStatus={handleStatus} />
+        <SwipeableTask 
+          key={t.id} 
+          t={t} 
+          deleteTask={deleteTask} 
+          handleStatus={handleStatus}
+          activeItemId={activeItemId}
+          setActiveItemId={setActiveItemId}
+        />
       )
       
     }

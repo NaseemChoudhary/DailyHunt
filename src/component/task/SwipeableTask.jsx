@@ -1,0 +1,276 @@
+import { useRef, useState, useCallback, useEffect } from 'react';
+import { SortableContext, useSortable } from "@dnd-kit/sortable";
+import { CSS } from "@dnd-kit/utilities";
+import './SwipeableTask.css';
+
+/**
+ * SwipeableTask Component
+ * 
+ * Features:
+ * - Desktop: Shows action buttons always visible
+ * - Mobile: Swipe left/right to reveal actions
+ * - Integrates with drag-and-drop sorting
+ * - Smooth animations with GPU-accelerated transforms
+ * - Only one item can be open at a time
+ */
+export default function SwipeableTask({
+  t,
+  deleteTask,
+  handleStatus,
+  activeItemId,
+  setActiveItemId,
+}) {
+  // Drag and drop state
+  const { attributes, listeners, setNodeRef, transform, transition } = useSortable({
+    id: t.id,
+  });
+
+  // Swipe state
+  const [translateX, setTranslateX] = useState(0);
+  const [isAnimating, setIsAnimating] = useState(false);
+
+  // Tracking refs
+  const startXRef = useRef(0);
+  const currentXRef = useRef(0);
+  const isDraggingRef = useRef(false);
+  const lastTimeRef = useRef(0);
+  const hasMovedRef = useRef(false);
+  const taskRef = useRef(null);
+
+  // Constants
+  const MAX_SWIPE = 80;
+  const OPEN_THRESHOLD = 50;
+  const FULL_ACTION_THRESHOLD = 140;
+  const ANIMATION_DURATION = 300;
+
+  // Check if this item is currently open
+  const isOpen = activeItemId === t.id;
+
+  /**
+   * Calculate velocity to enable faster swipe detection
+   */
+  const getVelocity = useCallback((distance, time) => {
+    if (time === 0) return 0;
+    return Math.abs(distance / time);
+  }, []);
+
+  /**
+   * Clamp swipe distance to prevent overswiping
+   */
+  const clampDistance = useCallback((distance) => {
+    return Math.max(-MAX_SWIPE, Math.min(MAX_SWIPE, distance));
+  }, []);
+
+  /**
+   * Pointer down - start swipe
+   */
+  const handlePointerDown = useCallback(
+    (e) => {
+      // Don't start swipe if using drag handle or already dragging
+      if (isDraggingRef.current || e.target.closest('.drag-handle')) return;
+
+      startXRef.current = e.clientX;
+      currentXRef.current = e.clientX;
+      isDraggingRef.current = true;
+      lastTimeRef.current = Date.now();
+      hasMovedRef.current = false;
+
+      // Mark this item as active (close others)
+      if (activeItemId !== t.id && activeItemId !== null) {
+        setActiveItemId(t.id);
+      }
+    },
+    [t.id, activeItemId, setActiveItemId]
+  );
+
+  /**
+   * Pointer move - update swipe position
+   */
+  const handlePointerMove = useCallback(
+    (e) => {
+      if (!isDraggingRef.current) return;
+
+      currentXRef.current = e.clientX;
+      const diff = e.clientX - startXRef.current;
+
+      // Mark as moved if distance > 5px (debounce)
+      if (Math.abs(diff) > 5) {
+        hasMovedRef.current = true;
+      }
+
+      // Update position without animation
+      if (hasMovedRef.current) {
+        setIsAnimating(false);
+        const clamped = clampDistance(diff);
+        setTranslateX(clamped);
+      }
+    },
+    [clampDistance]
+  );
+
+  /**
+   * Pointer up - finalize swipe
+   */
+  const handlePointerUp = useCallback(
+    (e) => {
+      if (!isDraggingRef.current) return;
+
+      isDraggingRef.current = false;
+      const timeDelta = Date.now() - lastTimeRef.current;
+      const distance = currentXRef.current - startXRef.current;
+      const velocity = getVelocity(distance, timeDelta);
+
+      // Velocity bonus for fast swipes
+      const velocityBonus = velocity > 0.5 ? 15 : 0;
+      const adjustedOpenThreshold = OPEN_THRESHOLD - velocityBonus;
+      const adjustedFullThreshold = FULL_ACTION_THRESHOLD - velocityBonus;
+
+      setIsAnimating(true);
+
+      if (distance > adjustedFullThreshold) {
+        // Full swipe right - instant delete
+        setTranslateX(MAX_SWIPE);
+        setTimeout(() => {
+          deleteTask(t.id);
+        }, ANIMATION_DURATION);
+      } else if (distance > adjustedOpenThreshold) {
+        // Partial swipe right - reveal delete
+        setTranslateX(MAX_SWIPE);
+        setActiveItemId(t.id);
+      } else if (distance < -adjustedFullThreshold) {
+        // Full swipe left - instant complete
+        setTranslateX(-MAX_SWIPE);
+        setTimeout(() => {
+          handleStatus(t.id);
+          setTranslateX(0);
+        }, ANIMATION_DURATION);
+      } else if (distance < -adjustedOpenThreshold) {
+        // Partial swipe left - reveal status
+        setTranslateX(-MAX_SWIPE);
+        setActiveItemId(t.id);
+      } else {
+        // Small swipe - snap back
+        setTranslateX(0);
+      }
+
+      hasMovedRef.current = false;
+    },
+    [t.id, deleteTask, handleStatus, getVelocity, setActiveItemId, clampDistance]
+  );
+
+  /**
+   * Close this item
+   */
+  const handleClose = useCallback(() => {
+    setIsAnimating(true);
+    setTranslateX(0);
+  }, []);
+
+  /**
+   * Handle action button clicks
+   */
+  const handleDeleteClick = useCallback(() => {
+    setIsAnimating(true);
+    setTranslateX(0);
+    setTimeout(() => {
+      deleteTask(t.id);
+    }, ANIMATION_DURATION);
+  }, [t.id, deleteTask]);
+
+  const handleStatusClick = useCallback(() => {
+    setIsAnimating(true);
+    setTranslateX(0);
+    setTimeout(() => {
+      handleStatus(t.id);
+    }, ANIMATION_DURATION);
+  }, [t.id, handleStatus]);
+
+  // Close other items when this one is being swiped open
+  useEffect(() => {
+    if (isOpen && translateX !== 0) {
+      // Item is open
+    }
+  }, [isOpen, translateX]);
+
+  const dndStyle = {
+    transform: CSS.Transform.toString(transform),
+    transition,
+  };
+
+  const swipeStyle = {
+    transform: `translateX(${translateX}px)`,
+    transition: isAnimating ? `transform ${ANIMATION_DURATION}ms cubic-bezier(0.34, 1.56, 0.64, 1)` : 'none',
+  };
+
+  return (
+    <div
+      ref={(node) => {
+        setNodeRef(node);
+        taskRef.current = node;
+      }}
+      style={dndStyle}
+      className="swipeable-task-wrapper"
+      onPointerDown={handlePointerDown}
+      onPointerMove={handlePointerMove}
+      onPointerUp={handlePointerUp}
+      onPointerLeave={handlePointerUp}
+    >
+      {/* Left action (Delete) - revealed on swipe right */}
+      <div className="task-action task-action-left">
+        <button
+          className="action-button delete-action"
+          onClick={handleDeleteClick}
+          aria-label="Delete task"
+        >
+          🗑️ Delete
+        </button>
+      </div>
+
+      {/* Right action (Status) - revealed on swipe left */}
+      <div className="task-action task-action-right">
+        <button
+          className="action-button status-action"
+          onClick={handleStatusClick}
+          aria-label={`Mark as ${t.status ? 'Pending' : 'Complete'}`}
+        >
+          {t.status ? '⏳ Pending' : '✓ Complete'}
+        </button>
+      </div>
+
+      {/* Main task content with swipe animation */}
+      <div className="task-block" style={swipeStyle}>
+        <div className="task-content">
+          <span className="drag-handle" {...attributes} {...listeners}>
+            ☰
+          </span>
+          <div className="task-text">{t.name}</div>
+        </div>
+
+        {/* Desktop action buttons (visible on large screens) */}
+        <div className="task-actions desktop-only">
+          <button
+            className="status desktop-button"
+            onClick={handleStatusClick}
+            aria-label={`Mark as ${t.status ? 'Pending' : 'Complete'}`}
+          >
+            {t.status ? 'Pending' : 'Done'}
+          </button>
+          <button
+            className="delete desktop-button"
+            onClick={handleDeleteClick}
+            aria-label="Delete task"
+          >
+            Delete
+          </button>
+        </div>
+      </div>
+
+      {/* Close hint text (shown when item is open) */}
+      {isOpen && translateX !== 0 && (
+        <div className="swipe-hint">
+          {translateX > 0 ? '← Swipe to delete' : 'Mark complete →'}
+        </div>
+      )}
+    </div>
+  );
+}

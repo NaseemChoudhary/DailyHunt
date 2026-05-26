@@ -7,7 +7,7 @@
 }
 
 .Block > div {
-  background: rgba(255, 255, 255, 0.12);
+  background: rgba(96, 165, 250, 0.08);
   padding: clamp(10px, 1vw, 16px) clamp(12px, 1.2vw, 18px);
   border-radius: clamp(14px, 1vw, 18px);
   font-weight: 700;
@@ -15,18 +15,12 @@
   min-width: clamp(52px, 9vw, 68px);
   text-align: center;
   color: var(--text);
-  border: 1px solid rgba(255, 255, 255, 0.14);
-  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--border);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1), 0 4px 16px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(12px);
 }
 
-@media (max-width: 520px) {
-  .Block {
-    gap: clamp(8px, 1.4vw, 10px);
-  }
-
-  .Block > div {
-    padding: clamp(8px, 0.9vw, 12px) clamp(10px, 1vw, 14px);
-    font-size: clamp(0.95rem, 1vw, 1.05rem);
-    min-width: clamp(46px, 10vw, 54px);
-  }
+[data-theme="light"] .Block > div {
+  background: rgba(59, 130, 246, 0.06);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.3), 0 4px 16px rgba(0, 0, 0, 0.05);
 }

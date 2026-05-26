@@ -1,0 +1,361 @@
+/* SwipeableTask Component Styles */
+
+/* ========================================
+   MOBILE-FIRST: Base swipeable styles
+   ======================================== */
+
+.swipeable-task-wrapper {
+  position: relative;
+  overflow: hidden;
+  border-radius: clamp(20px, 1.2vw, 24px);
+  
+  /* Allow pointer events for swipe */
+  touch-action: pan-y;
+}
+
+/* Main task block with swipe animations */
+.task-block {
+  display: flex;
+  align-items: stretch;
+  justify-content: space-between;
+  gap: clamp(12px, 1.6vw, 18px);
+  padding: clamp(16px, 1.6vw, 20px);
+  border-radius: clamp(20px, 1.2vw, 24px);
+  background: rgba(96, 165, 250, 0.06);
+  border: 1px solid rgba(148, 163, 184, 0.15);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(16px);
+  
+  /* GPU-accelerated transform for smooth animation */
+  will-change: transform;
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  
+  /* Smooth transitions (controlled by JS) */
+  transition: box-shadow 0.22s ease, border-color 0.22s ease;
+  
+  /* Prevent text selection during swipe */
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.task-block:hover {
+  transform: translateY(-2px) translateZ(0);
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.15);
+  border-color: rgba(148, 163, 184, 0.3);
+}
+
+/* Task content - flex container */
+.task-content {
+  display: flex;
+  gap: clamp(12px, 1.2vw, 16px);
+  align-items: flex-start;
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+/* Task text - with proper word wrapping */
+.task-text {
+  flex: 1 1 auto;
+  min-width: 0;
+  color: var(--text);
+  font-size: clamp(1rem, 1vw, 1.08rem);
+  line-height: 1.5;
+  word-break: break-word;
+  overflow-wrap: anywhere;
+}
+
+/* Drag handle */
+.drag-handle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6px;
+  color: var(--text);
+  cursor: grab;
+  flex: 0 0 auto;
+  opacity: 0.6;
+  transition: opacity 0.2s ease;
+}
+
+.drag-handle:hover {
+  opacity: 1;
+}
+
+.drag-handle:active {
+  cursor: grabbing;
+}
+
+/* ========================================
+   ACTION BUTTONS - Behind swipeable item
+   ======================================== */
+
+.task-action {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: clamp(16px, 1.6vw, 20px);
+  height: 100%;
+  z-index: 0;
+}
+
+/* Left action (Delete) - revealed on swipe right */
+.task-action-left {
+  left: 0;
+  background: linear-gradient(135deg, rgba(239, 68, 68, 0.3) 0%, rgba(220, 38, 38, 0.2) 100%);
+  min-width: 100px;
+}
+
+/* Right action (Status) - revealed on swipe left */
+.task-action-right {
+  right: 0;
+  background: linear-gradient(135deg, rgba(34, 197, 94, 0.3) 0%, rgba(22, 163, 74, 0.2) 100%);
+  min-width: 100px;
+}
+
+/* Action buttons inside revealed areas */
+.action-button {
+  background: none;
+  border: none;
+  color: var(--text);
+  cursor: pointer;
+  font-weight: 600;
+  font-size: clamp(0.85rem, 0.9vw, 0.95rem);
+  padding: clamp(8px, 0.9vw, 12px) clamp(12px, 1.2vw, 16px);
+  border-radius: clamp(12px, 1vw, 14px);
+  transition: transform 0.18s ease, filter 0.18s ease, background 0.18s ease;
+  opacity: 0.9;
+  white-space: nowrap;
+}
+
+.action-button:hover {
+  opacity: 1;
+  filter: brightness(1.15);
+}
+
+.action-button:active {
+  transform: scale(0.95);
+}
+
+/* Delete action styling */
+.delete-action {
+  color: var(--danger, #ef4444);
+}
+
+/* Status action styling */
+.status-action {
+  color: var(--success, #22c55e);
+}
+
+/* ========================================
+   DESKTOP ONLY: Action buttons
+   ======================================== */
+
+.desktop-only {
+  display: none;
+}
+
+/* ========================================
+   MOBILE VIEW: Hide desktop buttons, 
+   enable swipe, hide action buttons initially
+   ======================================== */
+
+@media (max-width: 767px) {
+  /* Hide desktop action buttons on mobile */
+  .task-actions.desktop-only {
+    display: none !important;
+  }
+
+  /* Hide action buttons behind swipe area by default */
+  .task-action {
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  /* Show action buttons when item is being swiped */
+  .swipeable-task-wrapper:active .task-action,
+  .task-block[style*="translateX"] ~ .task-action {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  /* Make swipe easier on mobile */
+  .swipeable-task-wrapper {
+    touch-action: pan-y;
+  }
+
+  /* Swipe hint text (appears when swiping) */
+  .swipe-hint {
+    position: absolute;
+    bottom: 8px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 0.75rem;
+    color: var(--text);
+    opacity: 0.5;
+    pointer-events: none;
+    animation: fadeInUp 0.2s ease;
+  }
+
+  @keyframes fadeInUp {
+    from {
+      opacity: 0;
+      transform: translateX(-50%) translateY(8px);
+    }
+    to {
+      opacity: 0.5;
+      transform: translateX(-50%) translateY(0);
+    }
+  }
+}
+
+/* ========================================
+   DESKTOP VIEW: Show action buttons always
+   ======================================== */
+
+@media (min-width: 768px) {
+  /* Show desktop action buttons */
+  .desktop-only {
+    display: flex;
+    flex-direction: column;
+    gap: clamp(8px, 1vw, 12px);
+    align-items: flex-end;
+    justify-content: center;
+    flex: 0 0 clamp(120px, 22vw, 180px);
+    min-width: clamp(120px, 18vw, 180px);
+  }
+
+  /* Desktop button styling */
+  .desktop-button {
+    flex: none;
+    width: auto;
+    padding: clamp(8px, 0.9vw, 12px) clamp(12px, 1.2vw, 16px);
+    border: 1px solid transparent;
+    border-radius: clamp(12px, 1vw, 14px);
+    cursor: pointer;
+    transition: transform 0.18s ease, filter 0.18s ease, border-color 0.18s ease;
+    font-weight: 700;
+    white-space: nowrap;
+    font-size: clamp(0.9rem, 0.95vw, 1rem);
+    background: rgba(96, 165, 250, 0.1);
+  }
+
+  /* Status button desktop styling */
+  .status.desktop-button {
+    background: linear-gradient(135deg, rgba(34, 197, 94, 0.2) 0%, rgba(22, 163, 74, 0.1) 100%);
+    border: 1px solid var(--success);
+    color: var(--success);
+  }
+
+  /* Delete button desktop styling */
+  .delete.desktop-button {
+    background: linear-gradient(135deg, rgba(239, 68, 68, 0.2) 0%, rgba(220, 38, 38, 0.1) 100%);
+    border: 1px solid var(--danger);
+    color: var(--danger);
+  }
+
+  .desktop-button:hover {
+    filter: brightness(1.2);
+    border-color: currentColor;
+  }
+
+  .desktop-button:active {
+    transform: scale(0.97);
+  }
+
+  /* On desktop, disable swipe (touch-action: auto allows drag) */
+  .swipeable-task-wrapper {
+    touch-action: auto;
+  }
+
+  /* Hide mobile action buttons on desktop */
+  .task-action {
+    display: none !important;
+  }
+
+  /* Hide swipe hints on desktop */
+  .swipe-hint {
+    display: none !important;
+  }
+
+  /* Remove swipe animation on desktop */
+  .task-block {
+    transition: box-shadow 0.22s ease, border-color 0.22s ease;
+  }
+}
+
+/* ========================================
+   ACCESSIBILITY & INTERACTION
+   ======================================== */
+
+/* Focus visible for keyboard navigation */
+.action-button:focus-visible,
+.desktop-button:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  .task-block {
+    transition: none !important;
+  }
+
+  .action-button,
+  .desktop-button {
+    transition: none !important;
+  }
+
+  @keyframes fadeInUp {
+    from {
+      opacity: 0.5;
+    }
+    to {
+      opacity: 0.5;
+    }
+  }
+}
+
+/* ========================================
+   DARK MODE SUPPORT
+   ======================================== */
+
+[data-theme="dark"] .task-action-left {
+  background: linear-gradient(135deg, rgba(239, 68, 68, 0.25) 0%, rgba(220, 38, 38, 0.15) 100%);
+}
+
+[data-theme="dark"] .task-action-right {
+  background: linear-gradient(135deg, rgba(34, 197, 94, 0.25) 0%, rgba(22, 163, 74, 0.15) 100%);
+}
+
+[data-theme="light"] .task-action-left {
+  background: linear-gradient(135deg, rgba(239, 68, 68, 0.15) 0%, rgba(220, 38, 38, 0.08) 100%);
+}
+
+[data-theme="light"] .task-action-right {
+  background: linear-gradient(135deg, rgba(34, 197, 94, 0.15) 0%, rgba(22, 163, 74, 0.08) 100%);
+}
+
+/* ========================================
+   ANIMATION: Smooth snapping
+   ======================================== */
+
+/* Define cubic-bezier for bouncy snap animation */
+@keyframes snapBounce {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(var(--target-position));
+  }
+}
+
+/* Support for GPU acceleration on all browsers */
+.task-block {
+  -webkit-transform: translateZ(0);
+  -webkit-backface-visibility: hidden;
+  -webkit-perspective: 1000;
+}

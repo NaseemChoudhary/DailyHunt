@@ -1,31 +1,12 @@
 .container {
-  max-width: 860px;
+  max-width: clamp(320px, 95vw, 900px);
   width: 100%;
-  padding: clamp(22px, 2.5vw, 28px);
+  padding: clamp(20px, 3vw, 32px);
   display: grid;
-  gap: clamp(20px, 2vw, 26px);
-  background: var(--surface);
-  border: 1px solid var(--border);
+  gap: clamp(20px, 3vw, 28px);
+  background: rgba(15, 23, 42, 0.5);
+  border: 1px solid rgba(148, 163, 184, 0.2);
   border-radius: clamp(24px, 2vw, 32px);
-  backdrop-filter: blur(18px);
-  box-shadow: var(--shadow);
-}
-
-.main-section {
-  display: grid;
-  gap: clamp(18px, 1.8vw, 22px);
-  padding: clamp(18px, 2vw, 24px);
-  border-radius: clamp(20px, 1.7vw, 28px);
-  background: var(--surface-strong);
-}
-
-@media (max-width: 640px) {
-  .container {
-    padding: clamp(18px, 3vw, 22px);
-    gap: clamp(16px, 3vw, 20px);
-  }
-
-  .main-section {
-    padding: clamp(16px, 3vw, 18px);
-  }
+  backdrop-filter: blur(20px);
+  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.1);
 }
