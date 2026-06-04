@@ -1,18 +1,9 @@
-import { useRef, useState, useCallback, useEffect } from 'react';
+import { useRef, useState, useCallback, useEffect } from "react";
 import { SortableContext, useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
-import './SwipeableTask.css';
+import TaskEditter from "./editTask";
+import "./SwipeableTask.css";
 
-/**
- * SwipeableTask Component
- * 
- * Features:
- * - Desktop: Shows action buttons always visible
- * - Mobile: Swipe left/right to reveal actions
- * - Integrates with drag-and-drop sorting
- * - Smooth animations with GPU-accelerated transforms
- * - Only one item can be open at a time
- */
 export default function SwipeableTask({
   t,
   deleteTask,
@@ -20,10 +11,12 @@ export default function SwipeableTask({
   activeItemId,
   setActiveItemId,
 }) {
+
   // Drag and drop state
-  const { attributes, listeners, setNodeRef, transform, transition } = useSortable({
-    id: t.id,
-  });
+  const { attributes, listeners, setNodeRef, transform, transition } =
+    useSortable({
+      id: t.id,
+    });
 
   // Swipe state
   const [translateX, setTranslateX] = useState(0);
@@ -36,6 +29,9 @@ export default function SwipeableTask({
   const lastTimeRef = useRef(0);
   const hasMovedRef = useRef(false);
   const taskRef = useRef(null);
+
+  // conditional rendering for notes
+  const [isEditing, setIsEditing] = useState(false);
 
   // Constants
   const MAX_SWIPE = 80;
@@ -67,7 +63,7 @@ export default function SwipeableTask({
   const handlePointerDown = useCallback(
     (e) => {
       // Don't start swipe if using drag handle or already dragging
-      if (isDraggingRef.current || e.target.closest('.drag-handle')) return;
+      if (isDraggingRef.current || e.target.closest(".drag-handle")) return;
 
       startXRef.current = e.clientX;
       currentXRef.current = e.clientX;
@@ -80,7 +76,7 @@ export default function SwipeableTask({
         setActiveItemId(t.id);
       }
     },
-    [t.id, activeItemId, setActiveItemId]
+    [t.id, activeItemId, setActiveItemId],
   );
 
   /**
@@ -105,8 +101,9 @@ export default function SwipeableTask({
         setTranslateX(clamped);
       }
     },
-    [clampDistance]
+    [clampDistance],
   );
+  
 
   /**
    * Pointer up - finalize swipe
@@ -155,7 +152,14 @@ export default function SwipeableTask({
 
       hasMovedRef.current = false;
     },
-    [t.id, deleteTask, handleStatus, getVelocity, setActiveItemId, clampDistance]
+    [
+      t.id,
+      deleteTask,
+      handleStatus,
+      getVelocity,
+      setActiveItemId,
+      clampDistance,
+    ],
   );
 
   /**
@@ -199,7 +203,9 @@ export default function SwipeableTask({
 
   const swipeStyle = {
     transform: `translateX(${translateX}px)`,
-    transition: isAnimating ? `transform ${ANIMATION_DURATION}ms cubic-bezier(0.34, 1.56, 0.64, 1)` : 'none',
+    transition: isAnimating
+      ? `transform ${ANIMATION_DURATION}ms cubic-bezier(0.34, 1.56, 0.64, 1)`
+      : "none",
   };
 
   return (
@@ -231,29 +237,34 @@ export default function SwipeableTask({
         <button
           className="action-button status-action"
           onClick={handleStatusClick}
-          aria-label={`Mark as ${t.status ? 'Pending' : 'Complete'}`}
+          aria-label={`Mark as ${t.status ? "Pending" : "Complete"}`}
         >
-          {t.status ? '⏳ Pending' : '✓ Complete'}
+          {t.status ? "⏳ Pending" : "✓ Complete"}
         </button>
       </div>
 
       {/* Main task content with swipe animation */}
-      <div className="task-block" style={swipeStyle}>
-        <div className="task-content">
-          <span className="drag-handle" {...attributes} {...listeners}>
-            ☰
-          </span>
-          <div className="task-text">{t.name}</div>
-        </div>
-
+      <div
+        className="task-block"
+        style={swipeStyle}
+        onDoubleClick={() => setIsEditing(true)}
+      >
+        {!isEditing && (
+          <div className="task-content">
+            <span className="drag-handle" {...attributes} {...listeners}>
+              ☰
+            </span>
+            <div className="task-text">{t.name}</div>
+          </div>
+        )}
         {/* Desktop action buttons (visible on large screens) */}
-        <div className="task-actions desktop-only">
+        {!isEditing && <div className="task-actions desktop-only">
           <button
             className="status desktop-button"
             onClick={handleStatusClick}
-            aria-label={`Mark as ${t.status ? 'Pending' : 'Complete'}`}
+            aria-label={`Mark as ${t.status ? "Pending" : "Complete"}`}
           >
-            {t.status ? 'Pending' : 'Done'}
+            {t.status ? "Pending" : "Done"}
           </button>
           <button
             className="delete desktop-button"
@@ -262,13 +273,15 @@ export default function SwipeableTask({
           >
             Delete
           </button>
-        </div>
+        </div>}
+        {/* Codtional rendering for the edit and note */}
+        {isEditing && <TaskEditter id={t.id} setIsEditing={setIsEditing} />}
       </div>
 
       {/* Close hint text (shown when item is open) */}
       {isOpen && translateX !== 0 && (
         <div className="swipe-hint">
-          {translateX > 0 ? '← Swipe to delete' : 'Mark complete →'}
+          {translateX > 0 ? "← Swipe to delete" : "Mark complete →"}
         </div>
       )}
     </div>

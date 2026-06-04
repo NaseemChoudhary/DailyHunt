@@ -1,10 +1,15 @@
-import { useState } from 'react';
+import { useState, useContext } from 'react';
+import { TaskFunContext } from '../../context/taskFunContext';
 import { closestCorners, DndContext, KeyboardSensor, PointerSensor, TouchSensor, useSensor, useSensors } from "@dnd-kit/core";
 import SwipeableTask from "./SwipeableTask";
 import "./ListRender.css"
 import { arrayMove, sortableKeyboardCoordinates} from "@dnd-kit/sortable";
 
-function ListRender({taskList, deleteTask, handleStatus, setTaskList}){
+
+function ListRender(){
+  const { taskList, deleteTask, handleStatus, setTaskList} =
+    useContext(TaskFunContext);
+    
   // Track which item is currently open for swipe actions
   const [activeItemId, setActiveItemId] = useState(null);
 
