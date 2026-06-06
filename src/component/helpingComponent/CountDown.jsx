@@ -1,19 +1,17 @@
-import { useState, useEffect } from "react";
+import { useContext } from "react";
 import "./CountDown.css";
+import { TaskFunContext } from "../../context/taskFunContext";
 
 export default function Timer({ Till }) {
-  const [now, setNow] = useState(new Date());
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setNow(new Date());
-    }, 1000);
-
-    return () => clearInterval(interval);
-  }, []);
+  const context = useContext(TaskFunContext) || {};
+  const currentTime =
+    typeof context.now === "number" ? new Date(context.now) : new Date();
 
   // Time calculations
-  const diff = Math.max(0, Till - now);
+  const target = Till instanceof Date ? Till : new Date(Till);
+  if (Number.isNaN(target.getTime())) return null;
+
+  const diff = Math.max(0, target.getTime() - currentTime.getTime());
   const totalSeconds = Math.floor(diff / 1000);
   const hours = Math.floor(totalSeconds / 3600);
   const minutes = Math.floor((totalSeconds % 3600) / 60);
@@ -26,7 +24,7 @@ export default function Timer({ Till }) {
 
   // Format digital string with zero padding for clean aesthetics
   const pad = (num) => String(num).padStart(2, "0");
-  const digital = `${hours}h ${pad(minutes)}m ${pad(seconds)}s`;
+  const digital = `${pad(hours)}h ${pad(minutes)}m ${pad(seconds)}s`;
 
   return (
     <div className="countdown-container">

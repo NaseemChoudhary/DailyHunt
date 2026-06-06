@@ -16,6 +16,15 @@ function TaskRender({ taskList, setTaskList }) {
   const sortTasks = (tasks) =>
     [...tasks].sort((a, b) => Number(a.status) - Number(b.status));
 
+    const [now, setNow] = useState(Date.now());
+
+    useEffect(() => {
+      const timerId = setInterval(() => {
+        setNow(Date.now());
+      }, 1000);
+
+      return () => clearInterval(timerId);
+    }, []);
   function handleChange(key, e) {
     setTask((t) => ({ ...t, [key]: e.target.value }));
   }
@@ -53,6 +62,7 @@ function TaskRender({ taskList, setTaskList }) {
       value={{
         taskList,
         setTaskList,
+          now,
         newTask,
         handleChange,
         addTask,

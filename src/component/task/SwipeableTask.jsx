@@ -1,8 +1,10 @@
-import { useRef, useState, useCallback, useEffect } from "react";
+import { useRef, useState, useCallback, useEffect, useContext } from "react";
 import { SortableContext, useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import TaskEditter from "./editTask";
 import "./SwipeableTask.css";
+import Timer from "../helpingComponent/CountDown";
+import { TaskFunContext } from "../../context/taskFunContext";
 
 export default function SwipeableTask({
   t,
@@ -17,6 +19,8 @@ export default function SwipeableTask({
     useSortable({
       id: t.id,
     });
+
+  const { now } = useContext(TaskFunContext);
 
   // Swipe state
   const [translateX, setTranslateX] = useState(0);
@@ -40,6 +44,13 @@ export default function SwipeableTask({
 
   // Check if this item is currently open
   const isOpen = activeItemId === t.id;
+
+  const timerTimestamp = t.timer ? new Date(t.timer).getTime() : null;
+  const isExpired =
+    timerTimestamp !== null &&
+    !Number.isNaN(timerTimestamp) &&
+    typeof now === "number" &&
+    timerTimestamp <= now;
 
   /**
    * Calculate velocity to enable faster swipe detection
@@ -235,12 +246,14 @@ export default function SwipeableTask({
 
       {/* Main task content with swipe animation */}
       <div
-        className={`${isEditing ? "edit" : "task-block"} ${t.status ? "completed" : ""}`}
+        className={`${isEditing ? "edit" : "task-block"} ${t.status ? "completed" : ""} ${isExpired ? "expired" : ""}`}
         style={swipeStyle}
         onDoubleClick={() => setIsEditing(true)}
       >
+        
         {!isEditing && (
           <div className="task-content">
+            {t.timer && <Timer Till={t.timer}/>} 
             <span className="drag-handle" {...attributes} {...listeners}>
               ☰
             </span>
