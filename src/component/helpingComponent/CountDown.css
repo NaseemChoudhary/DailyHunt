@@ -1,26 +1,117 @@
-.Block {
+/* Container Layout */
+.countdown-container {
   display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  padding: 0.5rem 0.25rem;
+  background-color: transparent;
+}
+
+/* Outer Glow Ring & Base of Clock */
+.clock-outer {
+  width: 84px;
+  height: 84px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
   justify-content: center;
-  gap: clamp(10px, 1.3vw, 14px);
-  flex-wrap: wrap;
-  margin-bottom: 0;
+  background: radial-gradient(circle at top, rgba(96, 165, 250, 0.15), transparent 60%),
+              rgba(17, 24, 39, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.04);
+  box-shadow: 0 10px 22px rgba(0, 0, 0, 0.35),
+              inset 0 1px 1px rgba(255,255,255,0.04);
+  position: relative;
 }
 
-.Block > div {
-  background: rgba(96, 165, 250, 0.08);
-  padding: clamp(10px, 1vw, 16px) clamp(12px, 1.2vw, 18px);
-  border-radius: clamp(14px, 1vw, 18px);
-  font-weight: 700;
-  font-size: clamp(1rem, 1.1vw, 1.25rem);
-  min-width: clamp(52px, 9vw, 68px);
-  text-align: center;
-  color: var(--text);
-  border: 1px solid var(--border);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1), 0 4px 16px rgba(0, 0, 0, 0.1);
-  backdrop-filter: blur(12px);
+/* Inner Clock Face with Gradient Fill */
+.clock-face {
+  width: 88%;
+  height: 88%;
+  border-radius: 50%;
+  background: radial-gradient(circle at center, rgba(18, 26, 36, 0.5) 0%, rgba(12, 18, 28, 0.85) 100%);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  position: relative;
 }
 
-[data-theme="light"] .Block > div {
-  background: rgba(59, 130, 246, 0.06);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.3), 0 4px 16px rgba(0, 0, 0, 0.05);
+/* Reusable Tick styling */
+.clock-tick {
+  position: absolute;
+  background: rgba(96, 165, 250, 0.5);
+  border-radius: 2px;
+}
+
+/* Positional definitions for 4 basic tick nodes */
+.tick-12 { top: 6px; left: 50%; width: 1.6px; height: 8px; transform: translateX(-50%); background: rgba(96, 165, 250, 0.85); }
+.tick-6  { bottom: 6px; left: 50%; width: 1.6px; height: 7px; transform: translateX(-50%); }
+.tick-3  { right: 6px; top: 50%; width: 7px; height: 1.6px; transform: translateY(-50%); }
+.tick-9  { left: 6px; top: 50%; width: 7px; height: 1.6px; transform: translateY(-50%); }
+
+/* Base Hands Settings */
+.clock-hand {
+  position: absolute;
+  left: 50%;
+  bottom: 50%;
+  transform-origin: bottom center;
+  border-radius: 4px;
+  transition: transform 0.18s linear;
+}
+
+/* Specific styling for Hour, Minute, and Second indicators */
+.hour-hand {
+  width: 3px;
+  height: 26%;
+  background: #60a5fa;
+  box-shadow: 0 0 6px rgba(96, 165, 250, 0.45);
+  margin-left: -1.5px; /* Adjust alignment to exact center */
+}
+
+.minute-hand {
+  width: 2px;
+  height: 34%;
+  background: #93c5fd;
+  box-shadow: 0 0 5px rgba(147, 197, 253, 0.32);
+  margin-left: -1px;
+}
+
+.second-hand {
+  width: 1px;
+  height: 36%;
+  background: #e6eefc;
+  margin-left: -0.5px;
+}
+
+/* Center pivot pin architectural accent */
+.clock-center-pin {
+  position: absolute;
+  width: 6px;
+  height: 6px;
+  background: #ffffff;
+  border-radius: 50%;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  box-shadow: 0 0 8px rgba(255, 255, 255, 0.7), 0 1px 3px rgba(0, 0, 0, 0.45);
+}
+
+/* Overlap Glassmorphic Digital Time Display Box */
+.digital-badge {
+  position: absolute;
+  bottom: -6px;
+  background: linear-gradient(135deg, rgba(22, 28, 38, 0.75) 0%, rgba(12, 18, 28, 0.85) 100%);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  padding: 6px 14px;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.45),
+              inset 0 1px 1px rgba(255, 255, 255, 0.03);
+}
+
+.digital-badge span {
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  color: #e6eefc;
+  font-size: 0.92rem;
+  font-weight: 600;
+  letter-spacing: 0.4px;
 }

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { TaskFunContext } from "./../../context/taskFunContext.js";
 import InputRender from "../input/InputRenders.jsx";
 import ListRender from "../task/ListRender.jsx";
@@ -13,23 +13,36 @@ function TaskRender({ taskList, setTaskList }) {
     timer: "",
   });
 
+  const sortTasks = (tasks) =>
+    [...tasks].sort((a, b) => Number(a.status) - Number(b.status));
+
   function handleChange(key, e) {
     setTask((t) => ({ ...t, [key]: e.target.value }));
   }
 
   function addTask() {
     if (newTask.name.trim() === "") return;
-    setTaskList((prev) => [...prev, newTask]);
+    setTaskList((prev) => sortTasks([...prev, newTask]));
     setTask({ id: Date.now(), name: "", status: false });
   }
 
   function handleStatus(id) {
     setTaskList((prev) =>
-      prev.map((newTask) =>
-        newTask.id === id ? { ...newTask, status: !newTask.status } : newTask,
+      sortTasks(
+        prev.map((newTask) =>
+          newTask.id === id ? { ...newTask, status: !newTask.status } : newTask,
+        ),
       ),
     );
   }
+
+  useEffect(() => {
+    const sorted = sortTasks(taskList);
+    const isSorted = taskList.every((task, index) => task.status === sorted[index]?.status);
+    if (!isSorted) {
+      setTaskList(sorted);
+    }
+  }, [taskList, setTaskList]);
 
   function deleteTask(id) {
     setTaskList((prev) => prev.filter((task) => task.id !== id));

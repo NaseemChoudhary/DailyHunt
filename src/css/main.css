@@ -142,7 +142,7 @@ nav{
 
 .container {
   max-width: clamp(320px, 95vw, 900px);
-  width: 100%;
+  width: 500px;
   padding: clamp(20px, 3vw, 32px);
   display: grid;
   gap: clamp(20px, 3vw, 28px);

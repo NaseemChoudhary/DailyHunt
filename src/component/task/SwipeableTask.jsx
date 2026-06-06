@@ -35,8 +35,7 @@ export default function SwipeableTask({
 
   // Constants
   const MAX_SWIPE = 80;
-  const OPEN_THRESHOLD = 50;
-  const FULL_ACTION_THRESHOLD = 140;
+  const FULL_ACTION_THRESHOLD = 80;
   const ANIMATION_DURATION = 300;
 
   // Check if this item is currently open
@@ -119,7 +118,6 @@ export default function SwipeableTask({
 
       // Velocity bonus for fast swipes
       const velocityBonus = velocity > 0.5 ? 15 : 0;
-      const adjustedOpenThreshold = OPEN_THRESHOLD - velocityBonus;
       const adjustedFullThreshold = FULL_ACTION_THRESHOLD - velocityBonus;
 
       setIsAnimating(true);
@@ -130,10 +128,6 @@ export default function SwipeableTask({
         setTimeout(() => {
           deleteTask(t.id);
         }, ANIMATION_DURATION);
-      } else if (distance > adjustedOpenThreshold) {
-        // Partial swipe right - reveal delete
-        setTranslateX(MAX_SWIPE);
-        setActiveItemId(t.id);
       } else if (distance < -adjustedFullThreshold) {
         // Full swipe left - instant complete
         setTranslateX(-MAX_SWIPE);
@@ -141,12 +135,8 @@ export default function SwipeableTask({
           handleStatus(t.id);
           setTranslateX(0);
         }, ANIMATION_DURATION);
-      } else if (distance < -adjustedOpenThreshold) {
-        // Partial swipe left - reveal status
-        setTranslateX(-MAX_SWIPE);
-        setActiveItemId(t.id);
       } else {
-        // Small swipe - snap back
+        // Any partial swipe snaps back to the start
         setTranslateX(0);
       }
 
@@ -245,7 +235,7 @@ export default function SwipeableTask({
 
       {/* Main task content with swipe animation */}
       <div
-        className="task-block"
+        className={`${isEditing ? "edit" : "task-block"} ${t.status ? "completed" : ""}`}
         style={swipeStyle}
         onDoubleClick={() => setIsEditing(true)}
       >
@@ -281,7 +271,7 @@ export default function SwipeableTask({
       {/* Close hint text (shown when item is open) */}
       {isOpen && translateX !== 0 && (
         <div className="swipe-hint">
-          {translateX > 0 ? "← Swipe to delete" : "Mark complete →"}
+          {translateX > 0 ? "← Swipe to delete" : t.status? "Swipe to Complete →": "Swipe to Pending →"}
         </div>
       )}
     </div>
