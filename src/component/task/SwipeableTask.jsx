@@ -253,30 +253,13 @@ export default function SwipeableTask({
         
         {!isEditing && (
           <div className="task-content">
-            {t.timer && <Timer Till={t.timer}/>} 
             <span className="drag-handle" {...attributes} {...listeners}>
               ☰
             </span>
             <div className="task-text">{t.name}</div>
+            {t.timer && <Timer Till={t.timer} className="task-timer" compact />} 
           </div>
         )}
-        {/* Desktop action buttons (visible on large screens) */}
-        {!isEditing && <div className="task-actions desktop-only">
-          <button
-            className="status desktop-button"
-            onClick={handleStatusClick}
-            aria-label={`Mark as ${t.status ? "Pending" : "Complete"}`}
-          >
-            {t.status ? "Pending" : "Done"}
-          </button>
-          <button
-            className="delete desktop-button"
-            onClick={handleDeleteClick}
-            aria-label="Delete task"
-          >
-            Delete
-          </button>
-        </div>}
         {/* Codtional rendering for the edit and note */}
         {isEditing && <TaskEditter id={t.id} setIsEditing={setIsEditing} />}
       </div>

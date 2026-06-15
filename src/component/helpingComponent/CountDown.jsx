@@ -1,12 +1,20 @@
-import { useContext } from "react";
+import { useContext, useEffect, useState } from "react";
 import "./CountDown.css";
 import { TaskFunContext } from "../../context/taskFunContext";
 
-export default function Timer({ Till }) {
+export default function Timer({ Till, className="", compact = false }) {
   const context = useContext(TaskFunContext) || {};
-  const currentTime =
-    typeof context.now === "number" ? new Date(context.now) : new Date();
 
+  const sharedNow = typeof context.now === "number" ? context.now : null;
+  const [localNow, setLocalNow] = useState(Date.now());    
+  
+  useEffect(() => {
+    if (sharedNow !== null) return;
+    const interval = setInterval(() => setLocalNow(Date.now()), 1000);
+    return () => clearInterval(interval);
+  }, [sharedNow]);
+
+  const currentTime = sharedNow !== null ? new Date(sharedNow): new Date(localNow);
   // Time calculations
   const target = Till instanceof Date ? Till : new Date(Till);
   if (Number.isNaN(target.getTime())) return null;
@@ -26,8 +34,18 @@ export default function Timer({ Till }) {
   const pad = (num) => String(num).padStart(2, "0");
   const digital = `${pad(hours)}h ${pad(minutes)}m ${pad(seconds)}s`;
 
+  if (compact) {
+    return(
+        <div className={`countdown-container compact ${className}`}>
+        <div className="digital-inline">
+          <span>{digital}</span>
+        </div>
+      </div>
+    )
+  }
+
   return (
-    <div className="countdown-container">
+    <div className={`countdown-container ${className}`}>
       <div className="clock-outer">
         <div className="clock-face">
           {/* Subtle tick markers for 12, 3, 6, and 9 o'clock */}

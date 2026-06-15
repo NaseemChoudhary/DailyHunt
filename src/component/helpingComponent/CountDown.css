@@ -115,3 +115,83 @@
   font-weight: 600;
   letter-spacing: 0.4px;
 }
+
+.countdown-container.compact {
+  display: inline-flex;
+  align-items: center;
+  padding: 0;
+  margin-left: 8px;
+  position: relative;
+}
+
+.digital-inline {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px 8px;
+  border-radius: 999px;
+  background: linear-gradient(135deg, rgba(22,28,38,0.6), rgba(12,18,28,0.75));
+  border: 1px solid rgba(255,255,255,0.04);
+  color: #e6eefc;
+  font-weight: 600;
+  font-size: 0.9rem;
+  box-shadow: 0 6px 14px rgba(0,0,0,0.35);
+}
+
+/* Hide the large clock elements visually but keep them available for hover popup */
+.countdown-container.compact .clock-outer,
+.countdown-container.compact .clock-face,
+.countdown-container.compact .digital-badge {
+  visibility: hidden;
+  opacity: 0;
+  transform: translate(-50%, 12px) scale(0.72) rotateX(12deg);
+  transition: opacity 260ms cubic-bezier(0.22, 1, 0.36, 1), transform 260ms cubic-bezier(0.22, 1, 0.36, 1);
+  pointer-events: none;
+}
+
+/* Hover / projector popup — show the full analog clock above the pill */
+.countdown-container.compact:hover .clock-outer,
+.task-block:hover .countdown-container.compact .clock-outer {
+  visibility: visible;
+  opacity: 1;
+  transform: translate(-50%, -26px) scale(1) rotateX(0deg);
+  position: absolute;
+  left: 50%;
+  bottom: calc(100%  10px);
+  z-index: 2000;
+  pointer-events: auto;
+  box-shadow: 0 24px 42px rgba(0, 0, 0, 0.28), 0 10px 24px rgba(96, 165, 250, 0.18);
+}
+
+.countdown-container.compact:hover .clock-face,
+.task-block:hover .countdown-container.compact .clock-face {
+  visibility: visible;
+  opacity: 1;
+}
+
+.countdown-container.compact:hover .digital-badge,
+.task-block:hover .countdown-container.compact .digital-badge {
+  visibility: visible;
+  opacity: 1;
+  position: absolute;
+  left: 50%;
+  bottom: calc(100% - 4px);
+  transform: translateX(-50%);
+  z-index: 2001;
+}
+
+.countdown-container.compact:hover::before,
+.task-block:hover .countdown-container.compact::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: calc(100%  8px);
+  width: 120px;
+  height: 76px;
+  transform: translateX(-50%) translateY(6px) rotateX(70deg);
+  background: radial-gradient(circle at center, rgba(96, 165, 250, 0.16), transparent 70%);
+  filter: blur(6px);
+  opacity: 0.82;
+  pointer-events: none;
+  z-index: 1998;
+ }

@@ -13,6 +13,12 @@
   touch-action: pan-y;
 }
 
+/* Allow popup elements (timer projector) to overflow on hover */
+.swipeable-task-wrapper:hover {
+  overflow: visible;
+  z-index: 10;
+}
+ 
 /* Main task block with swipe animations */
 .task-block {
   display: flex;
@@ -395,108 +401,7 @@
 
 /* Support for GPU acceleration on all browsers */
 .task-block {
-  transform: translateZ(0);
-  backface-visibility: hidden;
-  perspective: 1000;
   -webkit-transform: translateZ(0);
   -webkit-backface-visibility: hidden;
   -webkit-perspective: 1000;
-}
-
-
-.setTimer {
-  position: fixed;
-  inset: 0;
-  background: rgba(0, 0, 0, 0.45);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 9999;
-}
-
-.setTimer .panel {
-  width: min(420px, 92%);
-  background: linear-gradient(180deg, rgba(6,8,12,0.95), rgba(12,16,22,0.96));
-  border-radius: 12px;
-  padding: 14px;
-  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255,255,255,0.02);
-  border: 1px solid rgba(255,255,255,0.04);
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  color: var(--text);
-  position: relative;
-}
-
-.setTimer .panel h3 {
-  margin: 0;
-  text-align: center;
-  font-size: 1.05rem;
-  font-weight: 700;
-}
-
-.setTimer .row {
-  display: flex;
-  gap: 8px;
-  justify-content: center;
-  align-items: center;
-}
-
-.setTimer input:focus,
-.setTimer input:focus-visible {
-  outline: none;
-  border-color: #94a3b8;
-  box-shadow: 0 0 0 4px rgba(148,163,184,0.08);
-}
-.setTimer input[type="date"],
-.setTimer input[type="time"] {
-  appearance: none;
-  -webkit-appearance: none;
-  padding: 8px 10px;
-  border-radius: 8px;
-  border: 1px solid rgba(255,255,255,0.06);
-  background: rgba(255,255,255,0.02);
-  color: var(--text);
-  font-size: 0.95rem;
-}
-
-.setTimer .controls {
-  display: flex;
-  gap: 8px;
-  justify-content: center;
-  margin-top: 4px;
-}
-
-.setTimer .Add-Task {
-  padding: 8px 12px;
-  border-radius: 10px;
-  background: rgba(96,165,250,0.10);
-  border: 1px solid rgba(96,165,250,0.16);
-  color: var(--text);
-  font-weight: 700;
-  cursor: pointer;
-}
-
-.setTimer .Add-Task.delete {
-  background: rgba(239,68,68,0.10);
-  border-color: rgba(239,68,68,0.16);
-}
-
-.setTimer .close-btn {
-  position: absolute;
-  right: 12px;
-  top: 12px;
-  width: 30px;
-  height: 30px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 8px;
-  background: rgba(255,255,255,0.03);
-  border: 1px solid rgba(255,255,255,0.03);
-  cursor: pointer;
-}
-
-.setTimer .close-btn:hover {
-  filter: brightness(1.2);
 }
